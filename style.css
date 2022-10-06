@@ -48,54 +48,6 @@ form {
     width: 380px;
 }
 
-input {
-    border: 1px solid var(--neutral-light-violet);
-    border-radius: 7px;
-    height: 42px;;
-    width: 100%;
-    margin: 0.5em 0;
-}
-
-input:focus {
-    outline: none;
-}
-
-label, input {
-    display: block;
-}
-
-input {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 1rem;
-    padding-inline: .8rem;
-}
-
-.card-details {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-}
-
-input[name="exp-month"],
-input[name="exp-year"] {
-    display: inline-block;
-    width: 25%;
-}
-
-input[name="cvc"] {
-    display: inline-block;
-    width: 100%;
-}
-
-input[type="button"] {
-    background-color: var(--neutral-dark-violet);
-    border: none;
-    color: var(--neutral-white);
-}
-
-input[type="text"] {
-
-}
-
 label {
     font-size: 12px;
     text-transform: uppercase;
@@ -121,7 +73,7 @@ label {
 .card-back .cvc {
     color: white;
     position: absolute;
-    right: 60px;
+    right: 50px;
     top: 111px;
 }
 
@@ -158,6 +110,66 @@ label {
     bottom: 26px;
     right: 34px;
     position: absolute;
+}
+
+input {
+    border: 1px solid var(--neutral-light-violet);
+    border-radius: 7px;
+    height: 42px;
+    width: 100%;
+    margin: 0.5em 0;
+}
+
+input:focus {
+    outline: 2px solid hsl(278, 94%, 30%) !important;
+}
+
+label, input {
+    display: block;
+}
+
+input {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1rem;
+    box-sizing: border-box;
+    padding-inline: .8rem;
+}
+
+.card-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+input[name="exp-month"],
+input[name="exp-year"] {
+    display: inline-block;
+    width: 40%;
+}
+
+input[name="cvc"] {
+    display: inline-block;
+    width: 100%;
+}
+
+input[type="button"] {
+    background-color: var(--neutral-dark-violet);
+    border: none;
+    color: var(--neutral-white);
+    width: 100%;
+}
+
+.input-area {
+    padding-bottom: 20px;
+    position: relative;
+}
+
+input.error {
+    outline: 1px solid var(--primary-red);
+}
+
+.error-info {
+    text-transform: none;
+    color: var(--primary-red);
 }
 
 .hidden {

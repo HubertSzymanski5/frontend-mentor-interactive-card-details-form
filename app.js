@@ -1,60 +1,171 @@
+const getInputElement = (inputType) => {
+    return document.querySelector(`input[id=${inputType.inputId}]`);
+}
+
+const getDisplayElement = (inputType) => {
+    return document.querySelector(inputType.displaySelector);
+}
+
+const getErrorLabel = (inputType) => {
+    return document.querySelector(`label[for=${inputType.inputId}].error-info`);
+}
+
+function styleError(result, errorLabel, inputElement) {
+    if (result) {
+        errorLabel.classList.add("hidden");
+        inputElement.classList.remove("error");
+    } else {
+        errorLabel.classList.remove("hidden");
+        inputElement.classList.add("error");
+    }
+}
+
+function isValidNumber(inputElement, errorLabel) {
+    const intValue = parseInt(inputElement.value);
+    let result;
+    if (inputElement.value.trim() === "") {
+        errorLabel.textContent = "Can't be blank";
+        result = false;
+    } else if (!intValue || intValue < 1) {
+        errorLabel.textContent = "Invalid value"
+        result = false;
+    } else {
+        result = true;
+    }
+    styleError(result, errorLabel, inputElement);
+    return result;
+}
+
+const inputTypes = {
+    cardNumber: {
+        inputId: "card-number",
+        displaySelector: ".card-number",
+        modifyDuringType: (input, display) => {
+            if (input.value.length % 5 === 4) {
+                if (display.textContent.length > input.value.length) {
+                    input.value = input.value.substring(0, input.value.length - 1);
+                } else {
+                    input.value += " "
+                }
+            }
+        },
+        isValid: (inputType) => {
+            const regex = new RegExp("[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{4}");
+            const inputElement = getInputElement(inputType);
+            const errorLabel = getErrorLabel(inputType);
+            let result;
+            if (inputElement.value.trim() === "") {
+                errorLabel.textContent = "Can't be blank";
+                result = false;
+            } else if (inputElement.value.replaceAll(" ", "").length !== 16) {
+                errorLabel.textContent = "Wrong format, too short";
+                result = false;
+            } else if (!regex.test(inputElement.value.trim())) {
+                errorLabel.textContent = "Wrong format, numbers only";
+                result = false;
+            } else {
+                result = true;
+            }
+            styleError(result, errorLabel, inputElement);
+            return result;
+        },
+        default: "0000 0000 0000 0000"
+    },
+    cardholderName: {
+        inputId: "cardholder-name",
+        displaySelector: ".cardholder-name",
+        isValid: (inputType) => {
+            const regex = new RegExp("^[A-Za-z\- ]+$");
+            const inputElement = getInputElement(inputType);
+            const errorLabel = getErrorLabel(inputType);
+            let result = true;
+            if (inputElement.value.trim() === "") {
+                errorLabel.textContent = "Can't be blank";
+                result = false;
+            } else if (!regex.test(inputElement.value.trim())) {
+                errorLabel.textContent = "Illegal characters";
+                result = false;
+            }
+            styleError(result, errorLabel, inputElement);
+            return result;
+        }
+        ,
+        default: "name surname"
+    },
+    expMonth: {
+        inputId: "card-exp-month",
+        displaySelector: "span.month",
+        isValid: (inputType) => {
+            let result;
+            const inputElement = getInputElement(inputType);
+            const errorLabel = getErrorLabel(inputType);
+            const intValue = parseInt(inputElement.value);
+            if (inputElement.value.trim() === "") {
+                errorLabel.textContent = "Can't be blank";
+                result = false;
+            } else if (!intValue || intValue > 12 || intValue < 1) {
+                errorLabel.textContent = "Invalid value"
+                result = false;
+            } else {
+                result = true;
+            }
+            styleError(result, errorLabel, inputElement);
+            return result;
+        },
+        default: "00"
+    },
+    expYear: {
+        inputId: "card-exp-year",
+        displaySelector: "span.year",
+        isValid: (inputType) => {
+            const inputElement = getInputElement(inputType);
+            const errorLabel = getErrorLabel(inputTypes.expMonth);
+            return isValidNumber(inputElement, errorLabel);
+        },
+        default: "00"
+    },
+    cardCvc: {
+        inputId: "card-cvc",
+        displaySelector: ".cvc",
+        isValid: (inputType) => {
+            const inputElement = getInputElement(inputType);
+            const errorLabel = getErrorLabel(inputType);
+            return isValidNumber(inputElement, errorLabel);
+        },
+        default: "000"
+    }
+}
+
+const handleFormFilling = () => {
+    for (let inputKey in inputTypes) {
+        const inputType = inputTypes[inputKey];
+        const inputElement = getInputElement(inputType);
+        const displayElement = getDisplayElement(inputType);
+        inputElement.addEventListener("selectionchange", () => {
+            if (inputType.modifyDuringType) {
+                inputType.modifyDuringType(inputElement, displayElement);
+            }
+            const value = inputElement.value;
+            displayElement.textContent = value ? value : inputType.default;
+        });
+    }
+};
+
+handleFormFilling();
+window.onload = () => {
+    for (let inputKey in inputTypes) {
+        getInputElement(inputTypes[inputKey]).value = "";
+    }
+};
 
 const confirmButton = document.querySelector("input[type='button']");
-
 confirmButton.addEventListener("click", () => {
-    // TODO: verify and then go to thank You
-    console.log("brah...");
-});
-
-// HANDLE NUMBER
-const cardNumberInput = document.querySelector("input[id='card-number']");
-const cardNumberDisplay = document.querySelector(".card-number");
-cardNumberInput.addEventListener("selectionchange", (e) => {
-    // TODO: clear out this space insert / delete logic
-    if (cardNumberInput.value.length % 5 === 4) {
-        if (cardNumberDisplay.textContent.length > cardNumberInput.value.length) {
-            cardNumberInput.value = cardNumberInput.value.substring(0, cardNumberInput.value.length - 1);
-        } else {
-            cardNumberInput.value += " "
-        }
+    let isFormValid = true;
+    for (let inputKey in inputTypes) {
+        isFormValid = inputTypes[inputKey].isValid(inputTypes[inputKey]) && isFormValid;
     }
-    const value = cardNumberInput.value;
-    cardNumberDisplay.textContent = value ? value : "0000 0000 0000 0000";
+    if (isFormValid) {
+        document.querySelector("form").classList.add("hidden");
+        document.querySelector("div.completed").classList.remove("hidden");
+    }
 });
-
-// HANDLE NAME
-const cardholderNameInput = document.querySelector("input[id='cardholder-name']");
-const cardholderNameDisplay = document.querySelector(".cardholder-name");
-cardholderNameInput.addEventListener("selectionchange", () => {
-   const value = cardholderNameInput.value;
-   cardholderNameDisplay.textContent = value ? value : "name surname";
-});
-
-// HANDLE EXP DATE
-const expMonthInput = document.querySelector("input[id='card-exp-month']");
-const expMonthDisplay = document.querySelector("span.month");
-const expYearInput = document.querySelector("input[id='card-exp-year']");
-const expYearDisplay = document.querySelector("span.year");
-expMonthInput.addEventListener("selectionchange", () => {
-   expMonthDisplay.textContent = expMonthInput.value ? expMonthInput.value : "00";
-});
-expYearInput.addEventListener("selectionchange", () => {
-    expYearDisplay.textContent = expYearInput.value ? expYearInput.value : "00";
-});
-
-// HANDLE CVC
-const cvcInput = document.querySelector("input[id='card-cvc']");
-const cvcDisplay = document.querySelector(".cvc");
-cvcInput.addEventListener("selectionchange", () => {
-    cvcDisplay.textContent = cvcInput.value ? cvcInput.value : "000";
-});
-
-
-// let's clear onload - security ofc
-window.onload = () => {
-    cardNumberInput.value = "";
-    cardholderNameInput.value = "";
-    expMonthInput.value = "";
-    expYearInput.value = "";
-    cvcInput.value = "";
-};

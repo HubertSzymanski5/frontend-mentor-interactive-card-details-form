@@ -1,0 +1,165 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500&display=swap');
+
+:root {
+    --primary-active: linear-gradient(hsl(249, 99%, 64%), hsl(278, 94%, 30%));
+    --primary-red: hsl(0, 100%, 66%);
+
+    --neutral-white: hsl(0, 0%, 100%);
+    --neutral-light-violet: hsl(270, 3%, 87%);
+    --neutral-violet: hsl(279, 6%, 55%);
+    --neutral-dark-violet: hsl(278, 68%, 11%);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-size: 18px;
+    font-family: 'Space Grotesk', sans-serif;
+    width: 100vw;
+    height: 100vh;
+}
+
+main {
+    display: flex;
+    justify-content: start;
+    height: 100%;
+    width: 100%;
+}
+
+aside {
+    background: url("./images/bg-main-desktop.png");
+    height: 100%;
+    min-width: 480px;
+    position: relative;
+}
+
+section {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+form {
+    padding-left: 120px;
+    width: 380px;
+}
+
+input {
+    border: 1px solid var(--neutral-light-violet);
+    border-radius: 7px;
+    height: 42px;;
+    width: 100%;
+    margin: 0.5em 0;
+}
+
+input:focus {
+    outline: none;
+}
+
+label, input {
+    display: block;
+}
+
+input {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1rem;
+    padding-inline: .8rem;
+}
+
+.card-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+input[name="exp-month"],
+input[name="exp-year"] {
+    display: inline-block;
+    width: 25%;
+}
+
+input[name="cvc"] {
+    display: inline-block;
+    width: 100%;
+}
+
+input[type="button"] {
+    background-color: var(--neutral-dark-violet);
+    border: none;
+    color: var(--neutral-white);
+}
+
+input[type="text"] {
+
+}
+
+label {
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.card {
+    font-size: 14px;
+    color: var(--neutral-white);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    height: 245px;
+}
+
+.card-back {
+    background: url("./images/bg-card-back.png");
+    background-size: cover;
+    position: absolute;
+    bottom: 186px;
+    left: 258px;
+    width: 447px;
+}
+
+.card-back .cvc {
+    color: white;
+    position: absolute;
+    right: 60px;
+    top: 111px;
+}
+
+.card-front {
+    background-image: url("./images/bg-card-front.png");
+    height: 245px;
+    position: absolute;
+    left: 164px;
+    top: 186px;
+    width: 447px;
+}
+
+.card-front .card-logo {
+    position: absolute;
+    top: 25px;
+    left: 25px;
+}
+
+.card-front .card-number {
+    bottom: 64px;
+    text-align: center;
+    font-size: 30px;
+    position: absolute;
+    left: 32px;
+}
+
+.card-front .cardholder-name {
+    bottom: 26px;
+    left: 32px;
+    position: absolute;
+}
+
+.card-front .card-exp-date {
+    bottom: 26px;
+    right: 34px;
+    position: absolute;
+}
+
+.hidden {
+    display: none;
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
+
+  <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
+  
+  <title>Frontend Mentor | Interactive card details form</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <aside>
+      <div class="card card-back">
+        <p class="cvc">000</p>
+      </div>
+      <div class="card card-front">
+        <img src="./images/card-logo.svg" alt="logo" class="card-logo">
+        <p class="card-number">0000 0000 0000 0000</p>
+        <p class="cardholder-name">Name Surname</p>
+        <p class="card-exp-date">
+          <span class="month">00</span>/<span class="year">00</span>
+        </p>
+      </div>
+    </aside>
+    <section>
+      <form>
+        <label for="cardholder-name">Cardholder Name</label>
+        <input type="text" name="cardholder-name" id="cardholder-name" placeholder="e.g. Jane Appleseed">
+        <label for="card-number">Card Number</label>
+        <input type="text" name="number" id="card-number" maxlength="19" placeholder="e.g. 0000 0000 0000 0000">
+        <div class="card-details">
+          <div class="exp-details">
+            <label for="card-exp-month">Exp. Date (MM/YY)</label>
+            <input type="text" name="exp-month" id="card-exp-month" maxlength="2" placeholder="MM">
+            <input type="text" name="exp-year" id="card-exp-year" maxlength="2" placeholder="YY">
+          </div>
+          <div class="cvc-details">
+            <label for="card-cvc">CVC</label>
+            <input type="text" name="cvc" id="card-cvc" maxlength="3" placeholder="e.g. 123">
+          </div>
+        </div>
+        <input type="button" value="Confirm">
+      </form>
+      <div class="completed hidden">
+        Thank you!
+        We've added your card details
+        Continue
+      </div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

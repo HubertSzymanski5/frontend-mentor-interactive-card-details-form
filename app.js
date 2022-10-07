@@ -95,6 +95,9 @@ const inputTypes = {
     expMonth: {
         inputId: "card-exp-month",
         displaySelector: "span.month",
+        modifyDisplay: (inputValue) => {
+            return inputValue.length === 1 ? "0" + inputValue : inputValue;
+        },
         isValid: (inputType) => {
             let result;
             const inputElement = getInputElement(inputType);
@@ -117,6 +120,9 @@ const inputTypes = {
     expYear: {
         inputId: "card-exp-year",
         displaySelector: "span.year",
+        modifyDisplay: (inputValue) => {
+            return inputValue.length === 1 ? "0" + inputValue : inputValue;
+        },
         isValid: (inputType) => {
             const inputElement = getInputElement(inputType);
             const errorLabel = getErrorLabel(inputTypes.expMonth);
@@ -145,7 +151,10 @@ const handleFormFilling = () => {
             if (inputType.modifyDuringType) {
                 inputType.modifyDuringType(inputElement, displayElement);
             }
-            const value = inputElement.value;
+            let value = inputElement.value;
+            if (inputType.modifyDisplay) {
+                value = inputType.modifyDisplay(value);
+            }
             displayElement.textContent = value ? value : inputType.default;
         });
     }
@@ -158,14 +167,30 @@ window.onload = () => {
     }
 };
 
-const confirmButton = document.querySelector("input[type='button']");
-confirmButton.addEventListener("click", () => {
-    let isFormValid = true;
-    for (let inputKey in inputTypes) {
-        isFormValid = inputTypes[inputKey].isValid(inputTypes[inputKey]) && isFormValid;
-    }
-    if (isFormValid) {
-        document.querySelector("form").classList.add("hidden");
-        document.querySelector("div.completed").classList.remove("hidden");
-    }
-});
+function handleConfirmAndContinue() {
+    const confirmButton = document.querySelector("input[type='button']");
+    confirmButton.addEventListener("click", () => {
+        let isFormValid = true;
+        for (let inputKey in inputTypes) {
+            isFormValid = inputTypes[inputKey].isValid(inputTypes[inputKey]) && isFormValid;
+        }
+        if (isFormValid) {
+            document.querySelector(".card-front").classList.add("rotate");
+            document.querySelector(".card-back").classList.add("rotate");
+            document.querySelector("form").classList.add("rotate-out");
+            setTimeout(() => {
+                document.querySelector("form").classList.add("hidden");
+                document.querySelector("div.completed").classList.remove("hidden");
+                document.querySelector("div.completed").classList.add("rotate-in");
+
+            }, 1000);
+        }
+    });
+
+    const continueLink = document.querySelector(".completed a");
+    continueLink.addEventListener("click", () => {
+        window.location.reload();
+    });
+}
+
+handleConfirmAndContinue();
